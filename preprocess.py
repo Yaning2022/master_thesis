@@ -3,6 +3,19 @@
 #################################################################################
 
 
+# Check the image (greyscale or color)
+image_path = "/local/data1/yanwa579/Data/imageswithextraAFF_anonymized_8bit/patient_AAJEHHHPOU_NFF_image_1.png" 
+import os
+#install Pillow
+from PIL import Image
+
+
+# Load the image from folder
+image_test = Image.open(image_path)
+# Convert mode to check grayscale
+if image_test.mode == "L":  # 'L' mode means grayscale in Pillow
+    print("The image is grayscale.")
+
 #install OpenCV
 
 import os
@@ -17,7 +30,7 @@ output_folder = '/local/data1/yanwa579/Data/images_resize'
 
 # Function to zero-pad and resize an image
 def zeropad_and_resize(image):
-    h, w, c = image.shape
+    h, w = image.shape
     #get the largest dimention
     max_dimention = max(h, w)
     # Calculate padding for width and height
@@ -26,7 +39,7 @@ def zeropad_and_resize(image):
     zeropad_left = (max_dimention - w) // 2
     zeropad_right = max_dimention - w - zeropad_left
     # Add borders to the image
-    zeropadd_image = cv2.copyMakeBorder(image, zeropad_top, zeropad_bottom, zeropad_left, zeropad_right, cv2.BORDER_CONSTANT, value=[0, 0, 0])
+    zeropadd_image = cv2.copyMakeBorder(image, zeropad_top, zeropad_bottom, zeropad_left, zeropad_right, cv2.BORDER_CONSTANT, value=0)
     # Resize to 256x256
     resized_image = cv2.resize(zeropadd_image, (256,256))
     return resized_image
@@ -36,10 +49,10 @@ for filename in os.listdir(input_folder):
     #get the image path:   /local/data1/yanwa579/Data/../patient...png
     image_path = os.path.join(input_folder, filename)   
     # Read the image
-    image = cv2.imread(image_path)
-    #print(image.shape)
+    image = cv2.imread(image_path,cv2.IMREAD_GRAYSCALE)
+    print(image.shape)
     image_resized = zeropad_and_resize(image)
-    #print(image_resized.shape)
+    print(image_resized.shape)
     # Set output path
     output_path = os.path.join(output_folder, filename) 
     # Save the processed image
