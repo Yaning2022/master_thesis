@@ -179,7 +179,7 @@ print(f"Total patients: {len(patient_names)}")
 
 
 ##############
-##Test if the image is greyscale
+##test if the image is greyscale
 #############
 
 
@@ -223,31 +223,9 @@ if image.mode == "L":  # 'L' mode means grayscale in Pillow
 img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 print(img.shape)
 
-
-##############
-##Select 100 images from AFF_train folder used to test the code
-#############
-
-import os
-import shutil
-
-# Set source and destination folders
-source_folder = "/local/data1/yanwa579/Data/AFF_train"  
-destination_folder = "/local/data1/yanwa579/Data/testcode" 
-
-
-# Get list of image files
-image_files = [f for f in os.listdir(source_folder)]
-
-# Copy only the first 100 images
-for img in image_files[:100]:
-    src_path = os.path.join(source_folder, img)
-    dest_path = os.path.join(destination_folder, img)
-    shutil.copy(src_path, dest_path)
-
 ###################
 #Count the number of patients
-#Draw the histogram show how many patient own how mang images
+#draw the histogram show how many patient own how mang images
 ###################
 import os
 
@@ -259,9 +237,9 @@ image_files =[f for f in os.listdir(source_folder)]
 #Get the patient names like:{'DCAUHSLHGH': ['patient_DCAUHSLHGH_AFF_image_1.png']}
 patient_names = {}
 for image in image_files:
-    # Split the name based on _ 
+    # split the name based on _ 
     parts = image.split('_')
-    # Filename format like: patient_id_AFF_image_1.png
+    # filename format like: patient_id_AFF_image_1.png
     patient_name = parts[1]
     if patient_name not in patient_names:
         patient_names[patient_name] = []
@@ -281,9 +259,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 values = list(patients.values())
-plt.hist(values, bins=10,color='skyblue', edgecolor='black', alpha=0.7, density=True)
+plt.hist(values, bins=9,color='skyblue', edgecolor='black', alpha=0.7, density=True)
 # Add trend line
-sns.kdeplot(values, color='red', linewidth=2)
+#sns.kdeplot(values, color='red', linewidth=2)
 # Labels and title
 plt.xlabel("the number of images per patient")
 plt.ylabel("Frequency")
@@ -291,21 +269,24 @@ plt.show()
 max(patients.values())
 
 ############
-#Draw the image size distribution
+#draw the image size distribution
 ############
 
 image_sizes = []
-#Use os.listdir to obtain a list of images' names
+#use os.listdir to obtain a list of images' names
 for filename in os.listdir(source_folder):
-    #Get the image path:   /local/data1/yanwa579/Data/../patient...png
+    #get the image path:   /local/data1/yanwa579/Data/../patient...png
     image_path = os.path.join(source_folder, filename)   
     # Read the image
     image = cv2.imread(image_path,cv2.IMREAD_GRAYSCALE)
     image_sizes.append(image.size)
-
-plt.hist(image_sizes, bins=100, color='skyblue', edgecolor='black', alpha=0.7, density=True)
+unique_count = len(set(image_sizes))
+print(unique_count)
+print(min(image_sizes))
+print(max(image_sizes))
+plt.hist(image_sizes, bins=150, color='skyblue', edgecolor='black',alpha=0.7, density=True)
 # Add trend line
-sns.kdeplot(image_sizes, color='red', linewidth=2)
+#sns.kdeplot(image_sizes, color='red', linewidth=2)
 plt.xlabel("image size")
 plt.ylabel("Frequency")
 plt.show()
